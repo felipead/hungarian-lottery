@@ -5,18 +5,18 @@ type Registry interface {
 	ProcessLotteryPicks(picks []Number) Report
 }
 
-type bucket = map[PlayerID]bool
-
 type registry struct {
-	buckets []bucket
-}
-
-func NewRegistry() Registry {
 	//
 	// We are using bucket sort, or bin sort [https://en.wikipedia.org/wiki/Bucket_sort].
 	// We create several buckets, or bins, one for each possible lottery number.
-	// Assuming the possible lottery numbers are small set, memory footprint is manageable.
+	// Assuming the possible lottery numbers are a relatively small set, memory footprint is manageable.
 	//
+	buckets []bucket
+}
+
+type bucket = map[PlayerID]bool
+
+func NewRegistry() Registry {
 	buckets := make([]bucket, MaxNumber)
 	for i := 0; i < MaxNumber; i++ {
 		buckets[i] = make(bucket)
