@@ -44,7 +44,7 @@ func (r *registry) ProcessLotteryPicks(picks []Number) Report {
 	report := NewReport()
 
 	for _, count := range playerMatches {
-		report.IncrementWinners(count)
+		report.IncrementWinnersOf(count)
 	}
 
 	return report
