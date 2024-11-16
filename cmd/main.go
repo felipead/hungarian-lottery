@@ -17,7 +17,7 @@ func inputLoop(registry lottery.Registry) {
 
 	for scanner.Scan() {
 		if err := parsing.ParseLine(scanner.Text(), picks); err != nil {
-			log.Fatalf("could not parse input: %v\n", err)
+			log.Fatalf("could not parse input: %v", err)
 		}
 		report := registry.ProcessLotteryPicks(picks)
 		fmt.Println(report.ToString())
@@ -29,11 +29,11 @@ func main() {
 		log.Fatalf("no input file specified")
 	}
 	fileName := os.Args[1]
-	log.Infof("loading input file %v\n", fileName)
+	log.Infof("loading input file %v", fileName)
 
 	registry := lottery.NewRegistry()
 	if err := parsing.LoadPlayerPicksFromFile(fileName, registry); err != nil {
-		log.Fatalf("unable to load file: %v\n", err)
+		log.Fatalf("unable to load file: %v", err)
 	}
 
 	fmt.Println("READY")

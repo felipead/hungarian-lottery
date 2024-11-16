@@ -123,3 +123,16 @@ func TestLoadPlayerPicksFromFileNoNewlineAtEnd(t *testing.T) {
 	assert.True(t, registry.HasPlayerPick(535, 11))
 	assert.False(t, registry.HasPlayerPick(535, 10))
 }
+
+func TestLoadPlayerPicksFromFileSkippingBogusLines(t *testing.T) {
+	registry := lottery.NewRegistry()
+	err := LoadPlayerPicksFromFile("testdata/bogus.txt", registry)
+	assert.NoError(t, err)
+
+	assert.True(t, registry.HasPlayerPick(14, 12))
+	assert.True(t, registry.HasPlayerPick(14, 83))
+	assert.True(t, registry.HasPlayerPick(14, 73))
+	assert.True(t, registry.HasPlayerPick(14, 26))
+	assert.True(t, registry.HasPlayerPick(14, 32))
+	assert.False(t, registry.HasPlayerPick(14, 10))
+}

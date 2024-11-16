@@ -27,8 +27,12 @@ func LoadPlayerPicksFromFile(fileName string, registry lottery.Registry) error {
 	picks := make([]lottery.Number, lottery.NumPicks)
 
 	for scanner.Scan() {
+		if err := scanner.Err(); err != nil {
+			return err
+		}
+
 		if err := ParseLine(scanner.Text(), picks); err != nil {
-			log.Warnf("skipping line %v because it could not be parsed: %v\n", lineNumber, err)
+			log.Warnf("skipping line %v because it could not be parsed: %v", lineNumber, err)
 			lineNumber++
 			continue
 		}
