@@ -11,9 +11,9 @@ import (
 	"github.com/felipead/hungarian-lottery/pkg/lottery"
 )
 
-func ParsePicksLine(line string, buffer []lottery.Number) error {
+func ParsePicksLine(line string, picks []lottery.Number) error {
 	fields := strings.Fields(line)
-	if len(fields) > len(buffer) {
+	if len(fields) > len(picks) {
 		// TODO: better error message
 		return errors.New("too many fields")
 	}
@@ -30,12 +30,12 @@ func ParsePicksLine(line string, buffer []lottery.Number) error {
 			return errors.New("lottery number too big")
 		}
 
-		buffer[i] = number
+		picks[i] = number
 	}
 	return nil
 }
 
-func ParseLotteryRegistryFile(fileName string) lottery.Registry {
+func LoadPlayerPicksFromFile(fileName string, registry lottery.Registry) {
 	file, err := os.Open(fileName)
 	if err != nil {
 		log.Fatal(err)
@@ -44,7 +44,6 @@ func ParseLotteryRegistryFile(fileName string) lottery.Registry {
 		_ = file.Close()
 	}()
 
-	registry := lottery.NewRegistry()
 	scanner := bufio.NewScanner(file)
 	picks := make([]lottery.Number, lottery.NumPicks)
 	playerID := 1
@@ -61,6 +60,4 @@ func ParseLotteryRegistryFile(fileName string) lottery.Registry {
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
-
-	return registry
 }

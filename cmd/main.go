@@ -29,7 +29,8 @@ func main() {
 	}
 	fileName := os.Args[0]
 
-	registry := parsing.ParseLotteryRegistryFile(fileName)
+	registry := lottery.NewRegistry()
+	parsing.LoadPlayerPicksFromFile(fileName, registry)
 	fmt.Println("READY")
 	inputLoop(registry)
 }
