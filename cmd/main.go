@@ -16,6 +16,10 @@ func inputLoop(registry lottery.Registry) {
 	picks := make([]lottery.Number, lottery.NumPicks)
 
 	for scanner.Scan() {
+		if err := scanner.Err(); err != nil {
+			log.Fatalf("I/O error: %v", err)
+		}
+
 		if err := parsing.ParseLine(scanner.Text(), picks); err != nil {
 			log.Fatalf("could not parse input: %v", err)
 		}
