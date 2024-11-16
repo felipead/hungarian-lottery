@@ -3,48 +3,52 @@ package parsing
 import (
 	"bufio"
 	"errors"
-	"log"
 	"os"
 	"strconv"
 	"strings"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/felipead/hungarian-lottery/pkg/lottery"
 )
 
-func LoadPlayerPicksFromFile(fileName string, registry lottery.Registry) {
+func LoadPlayerPicksFromFile(fileName string, registry lottery.Registry) error {
 	file, err := os.Open(fileName)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer func() {
 		_ = file.Close()
 	}()
 
+	lineNumber := 1
+	playerID := 1
 	scanner := bufio.NewScanner(file)
 	picks := make([]lottery.Number, lottery.NumPicks)
-	playerID := 1
 
 	for scanner.Scan() {
-		if err := ParsePicksLine(scanner.Text(), picks); err != nil {
-			log.Fatal(err)
+		if err := ParseLine(scanner.Text(), picks); err != nil {
+			log.Warnf("skipping line %v because it could not be parsed: %v\n", lineNumber, err)
+			lineNumber++
+			continue
 		}
 
 		registry.RegisterPlayerPicks(playerID, picks)
+		lineNumber++
 		playerID++
 	}
 
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
+	return scanner.Err()
 }
 
-func ParsePicksLine(line string, picks []lottery.Number) error {
+func ParseLine(line string, picks []lottery.Number) error {
 	fields := strings.Fields(line)
 	if len(fields) != len(picks) {
-		return ErrInvalidQuantityOfPicks
+		return ErrInvalidQuantityOfPickedNumbers
 	}
 
-	for i, field := range fields {
+	for i := 0; i < len(picks); i++ {
+		field := fields[i]
 		parsed, err := strconv.ParseInt(field, 10, lottery.NumberBitSize)
 		if err != nil {
 			if errors.Is(err, strconv.ErrRange) {

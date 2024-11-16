@@ -3,6 +3,7 @@ package lottery
 type Registry interface {
 	RegisterPlayerPicks(playerID PlayerID, picks []Number)
 	ProcessLotteryPicks(picks []Number) Report
+	HasPlayerPick(playerID PlayerID, pick Number) bool
 }
 
 type registry struct {
@@ -48,4 +49,9 @@ func (r *registry) ProcessLotteryPicks(picks []Number) Report {
 		report.IncrementWinnersOf(count)
 	}
 	return report
+}
+
+func (r *registry) HasPlayerPick(playerID PlayerID, pick Number) bool {
+	bucket := r.buckets[pick-1]
+	return bucket[playerID]
 }
