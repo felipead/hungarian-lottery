@@ -41,20 +41,21 @@ func LoadPlayerPicksFromFile(fileName string, registry lottery.Registry) {
 func ParsePicksLine(line string, picks []lottery.Number) error {
 	fields := strings.Fields(line)
 	if len(fields) != len(picks) {
-		// TODO: better error message
-		return errors.New("invalid number of many fields")
+		return ErrInvalidQuantityOfPicks
 	}
 
 	for i, field := range fields {
 		parsed, err := strconv.ParseInt(field, 10, lottery.NumberBitSize)
 		if err != nil {
+			if errors.Is(err, strconv.ErrRange) {
+				return ErrPickedNumberOutOfRange
+			}
 			return err
 		}
 		pick := lottery.Number(parsed)
 
-		if pick > lottery.MaxNumber {
-			// TODO: better error message
-			return errors.New("lottery pick is too big")
+		if pick > lottery.MaxNumber || pick < 1 {
+			return ErrPickedNumberOutOfRange
 		}
 
 		picks[i] = pick
