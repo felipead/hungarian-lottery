@@ -7,28 +7,37 @@ import (
 
 type Report interface {
 	ToString() string
-	IncrementMatches(count int)
+	IncrementWinners(numbersMatching int)
+	GetWinners(numbersMatching int) int
 }
 
 type report struct {
-	matches []int
+	winners []int
 }
 
 func NewReport() Report {
 	return &report{
-		matches: make([]int, NumPicks-1),
+		winners: make([]int, NumPicks-1),
 	}
 }
 
-func (r *report) IncrementMatches(count int) {
-	index := count - 2
+func (r *report) GetWinners(numbersMatching int) int {
+	index := numbersMatching - 2
 	if index >= 0 {
-		r.matches[index]++
+		return r.winners[index]
+	}
+	panic("invalid numbers matching")
+}
+
+func (r *report) IncrementWinners(numbersMatching int) {
+	index := numbersMatching - 2
+	if index >= 0 {
+		r.winners[index]++
 	}
 }
 
 func (r *report) ToString() string {
-	matches := r.matches
+	matches := r.winners
 	var output strings.Builder
 
 	for i := 0; i < len(matches); i++ {
