@@ -1,10 +1,10 @@
 .PHONY: build
 build:
-	@go build -o lottery cmd/main.go
+	@go build -o hungarian-lottery cmd/main.go
 
 .PHONY: clean
 clean:
-	@rm -rf ./lottery
+	@rm -rf ./hungarian-lottery
 
 .PHONY: ci
 ci:
