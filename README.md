@@ -87,7 +87,7 @@ READY
 ## Output
 
 For each lottery pick that was inputted to the program, the output will be a line containing 4 numbers. 
-The first number will be total count of players with wins, the second number will be the total number of players 
+The first number will be total count of players with 2 wins, the second number will be the total number of players 
 with 3 wins, and so on.
 
 Example:
@@ -95,6 +95,16 @@ Example:
 ```
 225397 8174 99 1
 ```
+
+Translating to:
+
+
+| Numbers matching | Winners |
+|------------------|---------|
+| 5                | 1       |
+| 4                | 99      |
+| 3                | 8174    |
+| 2                | 225397  |
 
 A typical program session looks like the following. In this example, the optional `--debug` flag was passed to show 
 execution times.
