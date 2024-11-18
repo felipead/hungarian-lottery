@@ -25,49 +25,63 @@ func TestParseLineFailIfSlightlyAbove90(t *testing.T) {
 	picks := make([]lottery.Number, 5)
 
 	err := ParseLine("88 28 91 72 14", picks)
-	assert.ErrorIs(t, err, ErrPickedNumberOutOfRange)
+	assert.ErrorIs(t, err, ErrNumberOutOfRange)
 }
 
 func TestParseLineFailIfMuchAbove90(t *testing.T) {
 	picks := make([]lottery.Number, 5)
 
 	err := ParseLine("88 28 1000 72 14", picks)
-	assert.ErrorIs(t, err, ErrPickedNumberOutOfRange)
+	assert.ErrorIs(t, err, ErrNumberOutOfRange)
 }
 
 func TestParseLineFailIfZero(t *testing.T) {
 	picks := make([]lottery.Number, 5)
 
 	err := ParseLine("88 0 16 72 14", picks)
-	assert.ErrorIs(t, err, ErrPickedNumberOutOfRange)
+	assert.ErrorIs(t, err, ErrNumberOutOfRange)
 }
 
 func TestParseLineFailIfNegative(t *testing.T) {
 	picks := make([]lottery.Number, 5)
 
 	err := ParseLine("88 -17 16 72 14", picks)
-	assert.ErrorIs(t, err, ErrPickedNumberOutOfRange)
+	assert.ErrorIs(t, err, ErrNumberOutOfRange)
 }
 
 func TestParseLineFailIfHasLessFields(t *testing.T) {
 	picks := make([]lottery.Number, 5)
 
 	err := ParseLine("88 28 91 72", picks)
-	assert.ErrorIs(t, err, ErrInvalidQuantityOfPickedNumbers)
+	assert.ErrorIs(t, err, ErrInvalidQuantityOfNumbers)
 }
 
 func TestParseLineFailIfHasMoreFields(t *testing.T) {
 	picks := make([]lottery.Number, 5)
 
 	err := ParseLine("88 28 91 72 16 24", picks)
-	assert.ErrorIs(t, err, ErrInvalidQuantityOfPickedNumbers)
+	assert.ErrorIs(t, err, ErrInvalidQuantityOfNumbers)
 }
 
 func TestParseLineFailIfLineIsEmpty(t *testing.T) {
 	picks := make([]lottery.Number, 5)
 
 	err := ParseLine("", picks)
-	assert.ErrorIs(t, err, ErrInvalidQuantityOfPickedNumbers)
+	assert.ErrorIs(t, err, ErrInvalidQuantityOfNumbers)
+}
+
+func TestParseLineFailIfNumbersAreRepeated(t *testing.T) {
+	var err error
+	picks := make([]lottery.Number, 5)
+
+	err = ParseLine("10 20 30 40 40", picks)
+	assert.ErrorIs(t, err, ErrNoRepeatedNumbers)
+
+	err = ParseLine("1 1 30 40 50", picks)
+	assert.ErrorIs(t, err, ErrNoRepeatedNumbers)
+
+	err = ParseLine("10 20 30 20 50", picks)
+	assert.ErrorIs(t, err, ErrNoRepeatedNumbers)
 }
 
 func TestLoadPlayerPicksFromFile(t *testing.T) {

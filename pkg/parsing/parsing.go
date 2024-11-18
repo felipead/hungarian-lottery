@@ -92,7 +92,7 @@ func registerPlayers(fileName string, registry lottery.Registry) error {
 func ParseLine(line string, picks []lottery.Number) error {
 	fields := strings.Fields(line)
 	if len(fields) != len(picks) {
-		return ErrInvalidQuantityOfPickedNumbers
+		return ErrInvalidQuantityOfNumbers
 	}
 
 	for i := 0; i < len(picks); i++ {
@@ -100,17 +100,28 @@ func ParseLine(line string, picks []lottery.Number) error {
 		parsed, err := strconv.ParseInt(field, 10, lottery.NumberBitSize)
 		if err != nil {
 			if errors.Is(err, strconv.ErrRange) {
-				return ErrPickedNumberOutOfRange
+				return ErrNumberOutOfRange
 			}
 			return err
 		}
 		pick := lottery.Number(parsed)
 
 		if pick > lottery.MaxNumber || pick < 1 {
-			return ErrPickedNumberOutOfRange
+			return ErrNumberOutOfRange
 		}
 
 		picks[i] = pick
 	}
+
+	for i := 0; i < lottery.NumPicks; i++ {
+		for j := 0; j < lottery.NumPicks; j++ {
+			if i != j {
+				if picks[i] == picks[j] {
+					return ErrNoRepeatedNumbers
+				}
+			}
+		}
+	}
+
 	return nil
 }
