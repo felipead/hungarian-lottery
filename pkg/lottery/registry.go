@@ -24,7 +24,7 @@ type Registry interface {
 	// from [Registry.ProcessLotteryPicks] could be rendered as soon as possible.
 	ResetLastProcessing()
 
-	// TODO: improve
+	// HasPlayerPick determines if the player ID has picked the given number. Used for testing.
 	HasPlayerPick(playerID PlayerID, pick Number) bool
 }
 
