@@ -52,6 +52,9 @@ type registry struct {
 	playerMatches []int
 }
 
+// NewRegistryFromNumberAllocation creates a new lottery registry when the number allocations are already known.
+// This allows for player picks to be efficiently put into buckets, without the wasteful overhead of array resizing
+// during slice appends when the capacity of the array is not known.
 func NewRegistryFromNumberAllocation(allocation []int) Registry {
 	instance := registry{}
 
@@ -62,6 +65,8 @@ func NewRegistryFromNumberAllocation(allocation []int) Registry {
 	return &instance
 }
 
+// NewRegistry is only used for testing purposes. For production, because of efficiency concerns,
+// [NewRegistryFromNumberAllocation] should be used instead.
 func NewRegistry() Registry {
 	instance := registry{}
 

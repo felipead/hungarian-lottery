@@ -764,3 +764,129 @@ func TestSomePlayerPicksMatchLotteryPicksSample4(t *testing.T) {
 	assert.Equal(t, 9, report.GetWinnersHaving(2))
 	registry.ResetLastProcessing()
 }
+
+func TestSomePlayerPicksMatchLotteryPicksWithKnownNumberAllocation(t *testing.T) {
+	allocation := []int{
+		(1) - 1:  1,
+		(2) - 1:  1,
+		(3) - 1:  1,
+		(4) - 1:  1,
+		(5) - 1:  2,
+		(6) - 1:  1,
+		(7) - 1:  1,
+		(8) - 1:  0,
+		(9) - 1:  3,
+		(10) - 1: 3,
+		(11) - 1: 5,
+		(12) - 1: 2,
+		(13) - 1: 0,
+		(14) - 1: 1,
+		(15) - 1: 2,
+		(16) - 1: 3,
+		(17) - 1: 3,
+		(18) - 1: 0,
+		(19) - 1: 2,
+		(20) - 1: 4,
+		(21) - 1: 0,
+		(22) - 1: 6,
+		(23) - 1: 3,
+		(24) - 1: 1,
+		(25) - 1: 1,
+		(26) - 1: 2,
+		(27) - 1: 0,
+		(28) - 1: 0,
+		(29) - 1: 0,
+		(30) - 1: 3,
+		(31) - 1: 0,
+		(32) - 1: 1,
+		(33) - 1: 7,
+		(34) - 1: 0,
+		(35) - 1: 0,
+		(36) - 1: 1,
+		(37) - 1: 1,
+		(38) - 1: 0,
+		(39) - 1: 0,
+		(40) - 1: 1,
+		(41) - 1: 0,
+		(42) - 1: 0,
+		(43) - 1: 1,
+		(44) - 1: 5,
+		(45) - 1: 1,
+		(46) - 1: 0,
+		(47) - 1: 0,
+		(48) - 1: 0,
+		(49) - 1: 3,
+		(50) - 1: 4,
+		(51) - 1: 0,
+		(52) - 1: 0,
+		(53) - 1: 0,
+		(54) - 1: 0,
+		(55) - 1: 6,
+		(56) - 1: 1,
+		(57) - 1: 0,
+		(58) - 1: 1,
+		(59) - 1: 1,
+		(60) - 1: 2,
+		(61) - 1: 0,
+		(62) - 1: 0,
+		(63) - 1: 0,
+		(64) - 1: 0,
+		(65) - 1: 0,
+		(66) - 1: 0,
+		(67) - 1: 0,
+		(68) - 1: 1,
+		(69) - 1: 0,
+		(70) - 1: 0,
+		(71) - 1: 0,
+		(72) - 1: 0,
+		(73) - 1: 0,
+		(74) - 1: 0,
+		(75) - 1: 0,
+		(76) - 1: 1,
+		(77) - 1: 1,
+		(78) - 1: 0,
+		(79) - 1: 0,
+		(80) - 1: 2,
+		(81) - 1: 0,
+		(82) - 1: 0,
+		(83) - 1: 0,
+		(84) - 1: 0,
+		(85) - 1: 0,
+		(86) - 1: 0,
+		(87) - 1: 1,
+		(88) - 1: 3,
+		(89) - 1: 0,
+		(90) - 1: 3,
+	}
+
+	registry := NewRegistryFromNumberAllocation(allocation)
+
+	registry.RegisterPlayer(1, []Number{44, 22, 17, 11, 55})
+	registry.RegisterPlayer(2, []Number{19, 11, 30, 16, 15})
+	registry.RegisterPlayer(3, []Number{14, 5, 33, 44, 12})
+	registry.RegisterPlayer(4, []Number{30, 20, 15, 16, 60})
+	registry.RegisterPlayer(5, []Number{50, 22, 49, 44, 68})
+	registry.RegisterPlayer(6, []Number{19, 76, 90, 23, 17})
+	registry.RegisterPlayer(7, []Number{55, 80, 33, 22, 11})
+	registry.RegisterPlayer(8, []Number{44, 33, 22, 11, 5})
+	registry.RegisterPlayer(9, []Number{87, 88, 1, 4, 30})
+	registry.RegisterPlayer(10, []Number{11, 9, 33, 44, 88})
+	registry.RegisterPlayer(11, []Number{10, 22, 55, 88, 6})
+	registry.RegisterPlayer(12, []Number{50, 49, 37, 26, 45})
+	registry.RegisterPlayer(13, []Number{16, 33, 9, 55, 30})
+	registry.RegisterPlayer(14, []Number{25, 33, 24, 55, 50})
+	registry.RegisterPlayer(15, []Number{9, 20, 60, 77, 80})
+	registry.RegisterPlayer(16, []Number{49, 58, 56, 36, 90})
+	registry.RegisterPlayer(17, []Number{17, 20, 23, 10, 43})
+	registry.RegisterPlayer(18, []Number{40, 50, 12, 26, 90})
+	registry.RegisterPlayer(19, []Number{22, 23, 2, 3, 59})
+	registry.RegisterPlayer(20, []Number{32, 33, 7, 55, 20})
+	registry.BeReadyForProcessing()
+
+	report := registry.ProcessLotteryPicks([]Number{55, 11, 33, 22, 44})
+
+	assert.Equal(t, 0, report.GetWinnersHaving(5))
+	assert.Equal(t, 3, report.GetWinnersHaving(4))
+	assert.Equal(t, 1, report.GetWinnersHaving(3))
+	assert.Equal(t, 6, report.GetWinnersHaving(2))
+}
