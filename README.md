@@ -67,10 +67,10 @@ The following criteria must be met for a line to be considered valid:
 - Numbers should range from 1 to 90, inclusive.
 - The player's numbers must be distinct, i.e., the same line should not repeat any numbers.
 
-If a line from the file does not fit it any of these criteria, it will be SKIPPED and a warning will be printed 
-in the standard output.
+If a line from the input file does not fit any of the above criteria, it will be SKIPPED and a warning will be
+printed in the standard output.
 
-The lottery picks should be specified in the standard input (`STDIN`) in the same format, and subject to the same 
+The lottery picks should be specified in the standard input (`stdin`) in the same format, and subject to the same 
 validation, followed by a new line. Example:
 
 ```
@@ -78,12 +78,30 @@ validation, followed by a new line. Example:
 ```
 
 The lottery picks must only be inputted AFTER the program outputs the following line in the standard 
-output (`STDOUT`):
+output (`stdout`):
 
 ```
 READY
 ```
 
+## Output
+
+For each lottery pick that was inputted to the program, the output will be a line containing 4 numbers. 
+The first number will be total count of players with wins, the second number will be the total number of players 
+with 3 wins, and so on.
+
+Example:
+
+```
+225397 8174 99 1
+```
+
+A typical program session looks like the following. In this example, the optional `--debug` flag was passed to show 
+execution times.
+
+![Typical program session](doc/program-session-debug.png "Typical program session, with --debug")
+
 ## Solution Design
 
 ## Performance Considerations
+
