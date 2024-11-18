@@ -63,12 +63,15 @@ For example, these text contents represent the picks of 5 players:
 
 The following criteria must be met for a line to be considered valid:
 
-- The line must specify 5 distinct numbers
-- Numbers should range from 1 to 90, inclusive
-- The player's numbers must be distinct, i.e., the same line should not repeat any numbers
+- The line must specify 5 distinct numbers.
+- Numbers should range from 1 to 90, inclusive.
+- The player's numbers must be distinct, i.e., the same line should not repeat any numbers.
 
-The lottery picks should be specified in the standard input (`STDIN`) in the same format, following 
-by a new line. Example:
+If a line from the file does not fit it any of these criteria, it will be SKIPPED and a warning will be printed 
+in the standard output.
+
+The lottery picks should be specified in the standard input (`STDIN`) in the same format, and subject to the same 
+validation, followed by a new line. Example:
 
 ```
 11 45 12 87 58
