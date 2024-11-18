@@ -144,6 +144,8 @@ For efficiently retrieving the players that picked a given lottery number, we us
 represents the bucket of lottery number `N`. This bucket should store the IDs of all players that picked number `N`, 
 regardless of the order that it was picked.
 
+![Bucket-sort](doc/bucket-sort.png "Bucket-sort")
+
 As the input file is parsed, the player picks are stored into these buckets. For performance reasons, we traverse the 
 file twice, once to determine the necessary array allocations, and another to store the player picks. This is in order
 to avoid wasteful resizing of arrays and inefficient data copy that happen during slice appends, when the capacity of 
