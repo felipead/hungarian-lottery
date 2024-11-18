@@ -6,29 +6,27 @@ import (
 )
 
 type Report interface {
-	ToString() string
-	IncrementWinnersOf(numbersMatching int)
-	GetWinnersOf(numbersMatching int) int
+	IncrementWinnersHaving(numbersMatching int)
+	GetWinnersHaving(numbersMatching int) int
+	String() string
 }
 
-type report struct {
-	winners []int
+type reportType struct {
+	winners [NumPicks - 1]int
 }
 
 func NewReport() Report {
-	return &report{
-		winners: make([]int, NumPicks-1),
-	}
+	return &reportType{}
 }
 
-func (r *report) IncrementWinnersOf(numbersMatching int) {
+func (r *reportType) IncrementWinnersHaving(numbersMatching int) {
 	index := numbersMatching - 2
 	if index >= 0 {
 		r.winners[index]++
 	}
 }
 
-func (r *report) GetWinnersOf(numbersMatching int) int {
+func (r *reportType) GetWinnersHaving(numbersMatching int) int {
 	index := numbersMatching - 2
 	if index >= 0 {
 		return r.winners[index]
@@ -36,15 +34,14 @@ func (r *report) GetWinnersOf(numbersMatching int) int {
 	panic("invalid numbers matching")
 }
 
-func (r *report) ToString() string {
-	winners := r.winners
+func (r *reportType) String() string {
 	var output strings.Builder
+	length := len(r.winners)
 
-	for i := 0; i < len(winners); i++ {
-		count := winners[i]
-		last := len(winners) - 1
+	for i := 0; i < length; i++ {
+		count := r.winners[i]
 
-		if i != last {
+		if i != length-1 {
 			output.WriteString(fmt.Sprintf("%v ", count))
 		} else {
 			output.WriteString(fmt.Sprintf("%v", count))

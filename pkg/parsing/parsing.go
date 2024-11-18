@@ -12,32 +12,70 @@ import (
 	"github.com/felipead/hungarian-lottery/pkg/lottery"
 )
 
-func LoadPlayerPicksFromFile(fileName string, registry lottery.Registry) error {
+func LoadRegistryFromFile(fileName string) (lottery.Registry, error) {
+	allocation, err := determineNumberAllocation(fileName)
+	if err != nil {
+		return nil, err
+	}
+
+	registry := lottery.NewRegistryFromNumberAllocation(allocation)
+
+	if err = registerPlayers(fileName, registry); err != nil {
+		return nil, err
+	}
+
+	return registry, nil
+}
+
+func determineNumberAllocation(fileName string) ([]int, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	defer func() {
-		_ = file.Close()
-	}()
+	defer func() { _ = file.Close() }()
 
-	lineNumber := 1
-	playerID := 1
+	numberAllocation := make([]int, lottery.MaxNumber)
+
 	scanner := bufio.NewScanner(file)
 	picks := make([]lottery.Number, lottery.NumPicks)
 
 	for scanner.Scan() {
-		if err := scanner.Err(); err != nil {
-			return err
+		if err = ParseLine(scanner.Text(), picks); err != nil {
+			continue
 		}
 
-		if err := ParseLine(scanner.Text(), picks); err != nil {
+		for _, pick := range picks {
+			numberAllocation[pick-1]++
+		}
+	}
+
+	if err = scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return numberAllocation, nil
+}
+
+func registerPlayers(fileName string, registry lottery.Registry) error {
+	file, err := os.Open(fileName)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = file.Close() }()
+
+	lineNumber := 1
+	var playerID lottery.PlayerID = 1
+	scanner := bufio.NewScanner(file)
+	picks := make([]lottery.Number, lottery.NumPicks)
+
+	for scanner.Scan() {
+		if err = ParseLine(scanner.Text(), picks); err != nil {
 			log.Warnf("skipping line %v because it could not be parsed: %v", lineNumber, err)
 			lineNumber++
 			continue
 		}
 
-		registry.RegisterPlayerPicks(playerID, picks)
+		registry.RegisterPlayer(playerID, picks)
 		lineNumber++
 		playerID++
 	}
