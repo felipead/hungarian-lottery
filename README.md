@@ -210,6 +210,8 @@ for _, pick := range picks {
 }
 ```
 
+#### Benchmarks
+
 Because accessing the index of an array is significantly more performant than accessing the key of a hash map, I was
 able to implement a solution that performs under ~ 30ms. Much better than the previous ~ 450ms. Again, your mileage 
 may vary.
@@ -222,9 +224,35 @@ MacBook Pro (Retina, 15-inch, Mid 2015)
 16 GB 1600 MHz DDR3
 ```
 
-The only drawback is that much more memory is used now. For 10 million players, and considering the `int32` type, this
-sparse array consumes 40MB of RAM, most of it being empty. It is not very much by modern standards, but it may pose a
-challenge if the number of players reach the billions.
+#### Memory Usage
+
+The only drawback of using a sparse array to store all player matches is that much more memory is used. For 10 million 
+players, and considering the `int32` type, this sparse array consumes 40MB of RAM, most of it being empty. It is not 
+very much by modern standards, but it may pose a challenge if the number of players reach the billions.
+
+#### Asymptotic Runtime
+
+Let _n_ be the number of players, also the number of correct lines in the input file.
+
+Traversing the input file and writing the player IDs into the buckets is a _O(2n)_ operation. This is because we 
+traverse the file twice, in order to determine array allocations. Because the capacity of the buckets is determined 
+beforehand, adding a player to the bucket is _O(1)_. All this happens before we are `READY` to accept lottery picks 
+inputs, therefore we don't care much.
+
+From the lottery input we pick 5 buckets in _O(1)_ time (direct array indexing). Then, we traverse these buckets, 
+storing the number of intersections in a sparse array of size _n_. To traverse a bucket is _O(n/90)_ operation, which is
+almost 2 orders of magnitude, or 9000% (_90 times_) faster than traversing an array of all _n_ players in a linear
+fashion. Also, this operation could be further parallelized for faster processing times.
+
+Lastly, we must traverse the sparse array to count the number of wins. This takes _O(n)_ time.
+
+Total execution time for computing an input of lottery picks: 
+
+> 5 × _O(n/90) + O(n)_
+
+which is equivalent to:
+
+> _O(n)_
 
 #### Scaling to Billions of Players
 
