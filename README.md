@@ -1,6 +1,8 @@
 # HUNGARIAN LOTTERY
 
-This problem is related to the Hungarian lottery. In case you are not familiar with it: players pick 5 distinct 
+→ Author: Felipe Dornelas <m@felipedornelas.com>
+
+> This problem is related to the Hungarian lottery. In case you are not familiar with it: players pick 5 distinct 
 numbers from 1 to 90. There is a weekly lottery picking event when the lotto organization picks 5 distinct numbers 
 randomly between 1 and 90 – just like the players did. A player’s reward then depends on how many of the player’s 
 numbers match with the ones selected at the lotto picking. A player wins if they have 2, 3, 4 or 5 matching numbers.
@@ -283,3 +285,5 @@ to consolidate the data in a serial manner.
 
 The Map-Reduce pattern is a great fit here. Break a large data set into smaller chunks (Map), process them in parallel, 
 then consolidate the results of the computation (Reduce).
+
+◾️
