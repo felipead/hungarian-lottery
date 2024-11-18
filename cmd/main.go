@@ -45,8 +45,9 @@ func inputLoop(registry lottery.Registry, debugMode bool) {
 	picks := make([]lottery.Number, lottery.NumPicks)
 
 	for scanner.Scan() {
-		if err := parsing.ParseLine(scanner.Text(), picks); err != nil {
-			log.Fatalf("could not parse input: %v", err)
+		line := scanner.Text()
+		if err := parsing.ParseLine(line, picks); err != nil {
+			log.Fatalf("could not parse input: %v — '%v'", err, line)
 		}
 
 		var start time.Time

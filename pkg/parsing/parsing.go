@@ -73,8 +73,9 @@ func registerPlayers(fileName string, registry lottery.Registry) error {
 	picks := make([]lottery.Number, lottery.NumPicks)
 
 	for scanner.Scan() {
-		if err = ParseLine(scanner.Text(), picks); err != nil {
-			log.Warnf("skipping line %v because it could not be parsed: %v", lineNumber, err)
+		line := scanner.Text()
+		if err = ParseLine(line, picks); err != nil {
+			log.Warnf("skipping line %v: %v — '%v'", lineNumber, err, line)
 			lineNumber++
 			continue
 		}
