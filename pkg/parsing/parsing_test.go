@@ -71,7 +71,7 @@ func TestParseLineFailIfLineIsEmpty(t *testing.T) {
 }
 
 func TestLoadPlayerPicksFromFile(t *testing.T) {
-	registry, err := LoadRegistryFromFile("testdata/1k-players.txt")
+	registry, err := LoadFile("testdata/1k-players.txt")
 	assert.NoError(t, err)
 
 	assert.True(t, registry.HasPlayerPick(14, 12))
@@ -96,8 +96,8 @@ func TestLoadPlayerPicksFromFile(t *testing.T) {
 	assert.False(t, registry.HasPlayerPick(535, 10))
 }
 
-func TestLoadPlayerPicksFromFileNoNewlineAtEnd(t *testing.T) {
-	registry, err := LoadRegistryFromFile("testdata/1k-players_no-newline-at-end.txt")
+func TestLoadPlayerPicksFromFileWithoutNewlineAtEnd(t *testing.T) {
+	registry, err := LoadFile("testdata/1k-players_no-newline-at-end.txt")
 	assert.NoError(t, err)
 
 	assert.True(t, registry.HasPlayerPick(14, 12))
@@ -123,7 +123,7 @@ func TestLoadPlayerPicksFromFileNoNewlineAtEnd(t *testing.T) {
 }
 
 func TestLoadPlayerPicksFromFileSkippingBogusLines(t *testing.T) {
-	registry, err := LoadRegistryFromFile("testdata/bogus.txt")
+	registry, err := LoadFile("testdata/bogus.txt")
 	assert.NoError(t, err)
 
 	assert.True(t, registry.HasPlayerPick(14, 12))

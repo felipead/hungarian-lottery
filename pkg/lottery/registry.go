@@ -19,7 +19,8 @@ type Registry interface {
 	ProcessLotteryPicks(picks []Number) Report
 
 	// ResetLastProcessing cleans up and resets the state of this registry from last processing of lottery picks.
-	// Since clean-up  could take some time, this was added as a separate method so that the Report returned
+	// This method MUST be invoked at the end of the last processing, or before processing a new input.
+	// Since clean-up could take some time, it was designed as a separate method so that the Report returned
 	// from ProcessLotteryPicks could be rendered as soon as possible.
 	ResetLastProcessing()
 
@@ -121,10 +122,6 @@ func (r *registry) ProcessLotteryPicks(picks []Number) Report {
 }
 
 func (r *registry) ResetLastProcessing() {
-	//
-	// At the end of the last processing, or before processing a new input,
-	// this must be invoked.
-	//
 	for i := 0; i < len(r.playerMatches); i++ {
 		r.playerMatches[i] = 0
 	}

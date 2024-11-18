@@ -16,7 +16,7 @@ func main() {
 	fileName, debugMode := parseArgs()
 
 	log.Infof("loading input file %v", fileName)
-	registry, err := parsing.LoadRegistryFromFile(fileName)
+	registry, err := parsing.LoadFile(fileName)
 	if err != nil {
 		log.Fatalf("unable to load file: %v", err)
 	}

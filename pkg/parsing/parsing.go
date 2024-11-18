@@ -12,7 +12,11 @@ import (
 	"github.com/felipead/hungarian-lottery/pkg/lottery"
 )
 
-func LoadRegistryFromFile(fileName string) (lottery.Registry, error) {
+// LoadFile parses a file and fills the player picks into a new [lottery.Registry] instance.
+// For efficiency purposes, first the file is traversed so that we can determine the allocation
+// necessary to represent the player picks. Then, the file is read again to register the player picks.
+// This was done to avoid the unnecessary overhead from resizing the underlying arrays during slice appends.
+func LoadFile(fileName string) (lottery.Registry, error) {
 	allocation, err := determineNumberAllocation(fileName)
 	if err != nil {
 		return nil, err
@@ -83,6 +87,8 @@ func registerPlayers(fileName string, registry lottery.Registry) error {
 	return scanner.Err()
 }
 
+// ParseLine parses a textual line representing the picked lottery numbers.
+// The numbers must be separated by whitespace, as defined by [unicode.IsSpace].
 func ParseLine(line string, picks []lottery.Number) error {
 	fields := strings.Fields(line)
 	if len(fields) != len(picks) {
