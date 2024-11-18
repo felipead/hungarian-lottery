@@ -89,6 +89,8 @@ func registerPlayers(fileName string, registry lottery.Registry) error {
 
 // ParseLine parses a textual line representing the picked lottery numbers.
 // The numbers must be separated by whitespace, as defined by [unicode.IsSpace].
+// A fixed quantity of [lottery.NumPicks] should be given.
+// All numbers should be between 1 and [lottery.MaxNumber], inclusive.
 func ParseLine(line string, picks []lottery.Number) error {
 	fields := strings.Fields(line)
 	if len(fields) != len(picks) {
