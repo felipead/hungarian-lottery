@@ -2,11 +2,27 @@ package lottery
 
 import "runtime"
 
+// Registry registers the lottery players and their picks. It also processes the lottery picks.
 type Registry interface {
+
+	// RegisterPlayer registers a player and its numeric picks.
+	// The playerID is a unique, sequential number starting from 1. If these players are loaded from a file, this could
+	// be the line number.
+	// The picks is a slice containing NumPicks numbers.
 	RegisterPlayer(playerID PlayerID, picks []Number)
+
+	// BeReadyForProcessing carries optimizations necessary for correct and efficient processing of lottery picks.
+	// Should be invoked right before start accepting lottery picks as input.
 	BeReadyForProcessing()
+
+	// ProcessLotteryPicks processes the lottery picks from input, and returns a Report. Does the magic.
 	ProcessLotteryPicks(picks []Number) Report
+
+	// ResetLastProcessing cleans up and resets the state of this registry from last processing of lottery picks.
+	// Since clean-up  could take some time, this was added as a separate method so that the Report returned
+	// from ProcessLotteryPicks could be rendered as soon as possible.
 	ResetLastProcessing()
+
 	// TODO: improve
 	HasPlayerPick(playerID PlayerID, pick Number) bool
 }
@@ -25,7 +41,12 @@ type registry struct {
 
 	//
 	// This is a sparse arrays that counts the matches for all players, where the player ID is the index
-	// of the array.
+	// of the array. This allows for great efficiency gains when querying the result of a given lottery pick,
+	// since the counts for each player can be accessed by direct array access.
+	//
+	// In local benchmarks, using sparse arrays was responsible from a significant reduction from ~600ms to ~33ms in
+	// processing time, compared to hash maps. The downside of this approach is that much more memory is used compared
+	// to hash maps, since  each player must have an index in the array, regardless if it has wins or not.
 	//
 	playerMatches []int
 }
@@ -77,6 +98,13 @@ func (r *registry) BeReadyForProcessing() {
 }
 
 func (r *registry) ProcessLotteryPicks(picks []Number) Report {
+	//
+	// We use bucket sorting. For each number N picked by the lottery, we can efficiently query
+	// all players that also picked N by accessing the bucket whose index is N-1.
+	//
+	// We then count the player matches in a sparse array. This count can range from 0 to NumPicks (eg: 0 to 5),
+	// meaning how many matches that player got from the lottery picks.
+	//
 	for _, pick := range picks {
 		index := pick - 1
 		for _, playerID := range r.buckets[index] {
