@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Report tracks and reports the lottery wins. It is built by Registry during processing of lottery picks.
+// Report tracks and reports the lottery wins. It is built by [lottery.Registry] during processing of lottery picks.
 type Report interface {
 
 	// IncrementWinnersHaving increments the number of winners having the specified amount of matches. For example,

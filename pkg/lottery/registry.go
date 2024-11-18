@@ -15,13 +15,13 @@ type Registry interface {
 	// Should be invoked right before start accepting lottery picks as input.
 	BeReadyForProcessing()
 
-	// ProcessLotteryPicks processes the lottery picks from input, and returns a Report. Does the magic.
+	// ProcessLotteryPicks processes the lottery picks from input, and returns a [lottery.Report]. Does the magic.
 	ProcessLotteryPicks(picks []Number) Report
 
 	// ResetLastProcessing cleans up and resets the state of this registry from last processing of lottery picks.
 	// This method MUST be invoked at the end of the last processing, or before processing a new input.
-	// Since clean-up could take some time, it was designed as a separate method so that the Report returned
-	// from ProcessLotteryPicks could be rendered as soon as possible.
+	// Since clean-up could take some time, it was designed as a separate method so that the [lottery.Report] returned
+	// from [Registry.ProcessLotteryPicks] could be rendered as soon as possible.
 	ResetLastProcessing()
 
 	// TODO: improve
