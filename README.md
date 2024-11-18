@@ -148,7 +148,7 @@ regardless of the order that it was picked.
 
 As the input file is parsed, the player picks are stored into these buckets. For performance reasons, we traverse the 
 file twice, once to determine the necessary array allocations, and another to store the player picks. This is in order
-to avoid wasteful resizing of arrays and inefficient data copy that happen during slice appends, when the capacity of 
+to avoid the wasteful array resizing and inefficient data copy that happens during slice appends, when the capacity of 
 the array is not known beforehand.
 
 ```go
