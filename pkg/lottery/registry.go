@@ -45,9 +45,10 @@ type registry struct {
 	// of the array. This allows for great efficiency gains when querying the result of a given lottery pick,
 	// since the counts for each player can be accessed by direct array access.
 	//
-	// In local benchmarks, using sparse arrays was responsible from a significant reduction from ~600ms to ~33ms in
+	// In local benchmarks, using sparse arrays was responsible from a significant reduction from ~450ms to ~30ms in
 	// processing time, compared to hash maps. The downside of this approach is that much more memory is used compared
-	// to hash maps, since  each player must have an index in the array, regardless if it has wins or not.
+	// to hash maps, since each player must fill an index in the array, regardless if it has wins or not. Because
+	// there are fewer wins than bets, the array is sparse.
 	//
 	playerMatches []int
 }
