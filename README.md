@@ -239,12 +239,17 @@ sparse array again in order to consolidate the lottery results.
 One strategy we haven't explored yet, but could easily be applied here would be leveraging multiple threads. Modern CPUs
 have limited clocks, but may accommodate several cores. Some datacenters have servers with hundreds of CPUs.
 
-Go is a perfect language for multithreading, since goroutines are known for being lightweight threads. They have a very 
-small overhead compared to traditional threads in other languages.
+Go is a perfect language for multithreading, since goroutines are known for being 
+[lightweight threads](https://medium.com/@mail2rajeevshukla/unlocking-the-power-of-goroutines-understanding-gos-lightweight-concurrency-model-3775f8e696b0). 
+They have a very small overhead compared to traditional threads in other languages.
 
 We could have 5 threads, one for each bucket picked by the lottery. We would consolidate the results into the 
-sparse array, in parallel. Then again, the sparse array could be broken into smaller chunks and counted, also 
-in parallel.
+sparse array, in parallel. Then again, the array could be broken into smaller chunks and counted, also 
+in parallel by many goroutines.
 
 We must be careful, however, to prevent race conditions between threads. We should avoid or minimize the use of mutexes, 
-which can be very costly. The solution should be designed cleverly, and use channels to consolidate the data.
+which can be very costly. The solution should be designed cleverly, and use [channels](https://gobyexample.com/channels)
+to consolidate the data in a serial manner.
+
+The Map-Reduce pattern is a great fit here. Break a large data set into smaller chunks (Map), process them in parallel, 
+then consolidate the results of the computation (Reduce).
