@@ -5,9 +5,18 @@ import (
 	"strings"
 )
 
+// Report tracks and reports the lottery wins. It is built by Registry during processing of lottery picks.
 type Report interface {
-	IncrementWinnersHaving(numbersMatching int)
-	GetWinnersHaving(numbersMatching int) int
+
+	// IncrementWinnersHaving increments the number of winners having the specified amount of matches. For example,
+	// if the given amount of matches is 4, that increases the number of wins for that group. However, if there's less
+	// than 2 matches, that's not considered a win.
+	IncrementWinnersHaving(matches int)
+
+	// GetWinnersHaving returns the number of winners having the specified amount of matches.
+	GetWinnersHaving(matches int) int
+
+	// String formats the report for textual representation.
 	String() string
 }
 
@@ -19,19 +28,19 @@ func NewReport() Report {
 	return &reportType{}
 }
 
-func (r *reportType) IncrementWinnersHaving(numbersMatching int) {
-	index := numbersMatching - 2
+func (r *reportType) IncrementWinnersHaving(matches int) {
+	index := matches - 2
 	if index >= 0 {
 		r.winners[index]++
 	}
 }
 
-func (r *reportType) GetWinnersHaving(numbersMatching int) int {
-	index := numbersMatching - 2
+func (r *reportType) GetWinnersHaving(matches int) int {
+	index := matches - 2
 	if index >= 0 {
 		return r.winners[index]
 	}
-	panic("invalid numbers matching")
+	return 0
 }
 
 func (r *reportType) String() string {
