@@ -8,13 +8,12 @@ clean:
 
 .PHONY: ci
 ci:
-	@make lint
 	@make test
 
 .PHONY: lint
 lint:
-	@echo all good for now
+	@golangci-lint run ./...
 
 .PHONY: test
 test:
-	go test -v ./...
+	@go test -v ./...

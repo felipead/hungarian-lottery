@@ -111,6 +111,19 @@ execution times.
 
 ![Typical program session](doc/program-session-debug.png "Typical program session, with --debug")
 
+## Development Tasks
+
+Running the unit test suite:
+
+```
+make test
+```
+
+Using code linters:
+
+1. Install `golangci-lint` from [here](https://golangci-lint.run/welcome/install/#local-installation). This is system dependent.
+2. Run `make lint`.
+
 ## Solution Design
 
 ## Performance Considerations
