@@ -277,13 +277,15 @@ They have a very small overhead compared to traditional threads in other languag
 
 We could have 5 threads, one for each bucket picked by the lottery. We would consolidate the results into the 
 sparse array, in parallel. Then again, the array could be broken into smaller chunks and counted, also 
-in parallel by many goroutines.
+in parallel by many goroutines. The Map-Reduce pattern is a great fit here. Break a large data set into smaller
+chunks (Map), process them in parallel, then consolidate the results of the computation (Reduce).
 
-We must be careful, however, to prevent race conditions between threads. We should avoid or minimize the use of mutexes, 
+We must be careful, however, to prevent race conditions between threads. We should avoid the use of mutexes,
 which can be very costly. The solution should be designed cleverly, and use [channels](https://gobyexample.com/channels)
-to consolidate the data in a serial manner.
+to serialize the data.
 
-The Map-Reduce pattern is a great fit here. Break a large data set into smaller chunks (Map), process them in parallel, 
-then consolidate the results of the computation (Reduce).
+The idea is to distribute the input to several goroutines, which would process their respective chunks in parallel,
+pushing the results of those computations to a serial channel. Another goroutine listens to the channel and consolidates
+the results into the array in a serial manner, avoiding race conditions or the need for mutexes.
 
 ◾️
