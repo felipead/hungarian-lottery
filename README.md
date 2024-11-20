@@ -154,9 +154,9 @@ to avoid the wasteful array resizing and inefficient data copy that happens duri
 the array is not known beforehand.
 
 ```go
-buckets := make([]uint8, 90)
+buckets := make([][]int32, 90)
 for i := 0; i < len(buckets); i++ {
-	buckets[i] = make([]int32, 0, allocation[i])
+    buckets[i] = make([]int32, 0, allocation[i])
 }
 ```
 
@@ -188,8 +188,8 @@ player ID as key to a hash map. The values would count how many times the player
 ```go
 matches := make(map[int32]int32, 10000000)
 for _, pick := range picks {
-	for _, playerID := range buckets[pick-1] {
-		matches[playerID] += 1	
+    for _, playerID := range buckets[pick-1] {
+        matches[playerID] += 1
     }
 }
 ```
@@ -206,8 +206,8 @@ for most players, there will be zero wins. We are only interested in those playe
 ```go
 matches := make([]int32, 10000000)
 for _, pick := range picks {
-	for _, playerID := range buckets[pick-1] {
-		matches[playerID-1] += 1
+    for _, playerID := range buckets[pick-1] {
+        matches[playerID-1] += 1
     }
 }
 ```
